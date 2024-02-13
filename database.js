@@ -20,16 +20,37 @@ export async function createTable() {
 export async function getMenuItems() {
   return new Promise((resolve) => {
     db.transaction((tx) => {
-      tx.executeSql("select * from menuitems", [], (_, { rows }) => {
-        resolve(rows._array);
-      });
+      tx.executeSql(
+        "drop table if exists menuitems; select * from menuitems",
+        [],
+        (_, { rows }) => {
+          resolve(rows._array);
+        }
+      );
     });
   });
 }
 
 export function saveMenuItems(menuItems) {
+  const allMenu = menuItems.map((item) => [
+    item.id,
+    item.title,
+    item.price,
+    item.category,
+  ]);
+  console.log(allMenu);
   db.transaction((tx) => {
     // 2. Implement a single SQL statement to save all menu data in a table called menuitems.
+    tx.executeSql(
+      "insert into menuitems (uuid, title, price, category) values (?, ?, ?, ?)",
+      ,
+      () => {
+        console.log("Menu items inserted successfully!");
+      },
+      (error) => {
+        console.error("Error inserting menu items", error);
+      }
+    );
     // Check the createTable() function above to see all the different columns the table has
     // Hint: You need a SQL statement to insert multiple rows at once.
   });
