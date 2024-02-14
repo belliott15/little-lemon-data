@@ -56,10 +56,40 @@ export const SECTION_LIST_MOCK_DATA = [
  */
 export function getSectionListData(data) {
   // SECTION_LIST_MOCK_DATA is an example of the data structure you need to return from this function.
+  const newObject = {};
   // The title of each section should be the category.
+  data.forEach((item) => {
+    if (newObject[item.category]) {
+      newObject[item.category].data.push({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+      });
+    } else {
+      newObject[item.category] = {
+        title: item.category,
+        data: [
+          {
+            id: item.id,
+            title: item.title,
+            price: item.price,
+          },
+        ],
+      };
+    }
+  });
+  const resultArray = Object.keys(newObject).map((key) => {
+    return {
+      title: newObject[key].title,
+      data: newObject[key].data,
+    };
+  });
+  // console.log(newObject, "newObject");
+  // console.log(resultArray, "result array");
   // The data property should contain an array of menu items.
   // Each item has the following properties: "id", "title" and "price"
-  return SECTION_LIST_MOCK_DATA;
+  // console.log(resultArray[0], "result array");
+  return resultArray;
 }
 
 export function useUpdateEffect(effect, dependencies = []) {

@@ -31,13 +31,13 @@ export function saveMenuItems(menuItems) {
   db.transaction((tx) => {
     // 2. Implement a single SQL statement to save all menu data in a table called menuitems.
     tx.executeSql(
-      "insert into menuitems (uuid, title, price, category) values (?, ?, ?, ?)",
-      menuItems
+      `insert into menuitems (uuid, title, price, category) values 
+      ${menuItems
         .map(
           (item) =>
-            `(${item.id}, ${item.title}, ${item.price}, ${item.category})`
+            `('${item.id}', '${item.title}', '${item.price}', '${item.category}')`
         )
-        .join(", "),
+        .join(", ")}`,
       () => {
         console.log("Menu items inserted successfully!");
       },
