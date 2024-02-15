@@ -79,6 +79,7 @@ export async function filterByQueryAndCategories(query, activeCategories) {
     db.transaction((tx) => {
       //create a query string parameter to follow sqlite syntax
       const queryString = `%${query}%`;
+
       //create an array of active categories to select from
       const categoryParams = activeCategories
         .map((category) => `'${category}'`)
