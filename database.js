@@ -72,6 +72,39 @@ export function saveMenuItems(menuItems) {
  */
 export async function filterByQueryAndCategories(query, activeCategories) {
   return new Promise((resolve, reject) => {
-    resolve(SECTION_LIST_MOCK_DATA);
+    //query is the search bar function and searches the titles for
+    //similarities to return
+    //activeCategories is an array of categories that are selected
+    //create a transaction with the database object
+    db.transaction((tx) => {
+      //create a query string parameter to follow sqlite syntax
+      const queryString = `%${query}%`;
+      //create an array of active categories to select from
+      const categoryParams = activeCategories
+        .map((category) => `'${category}'`)
+        .join(",");
+
+      //write the sql statement that will select all from menuitems table
+      //where title has the query string in it and the category belongs to one
+      //of the active category params
+      const sqlStatement = `
+      SELECT * 
+      FROM menuitems 
+      WHERE title LIKE ? 
+      AND category IN (${categoryParams})`;
+
+      //use the executeSql statement to pass the sql statement, the query string, success, and error
+      tx.executeSql(
+        sqlStatement,
+        [queryString],
+        (_, { rows }) => {
+          const filteredMenu = rows._array;
+          resolve(filteredMenu);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
   });
 }

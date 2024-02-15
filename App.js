@@ -35,7 +35,7 @@ export default function App() {
   const [searchBarText, setSearchBarText] = useState("");
   const [query, setQuery] = useState("");
   const [filterSelections, setFilterSelections] = useState(
-    sections.map(() => false)
+    data.map((item) => item.title)
   );
 
   const fetchData = async () => {
